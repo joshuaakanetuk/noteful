@@ -1,0 +1,14 @@
+.note {
+    width: 100%;
+    padding: 30px 5px;
+    border: 1px solid black;
+    margin-bottom: 15px;
+}
+
+a .note__title {
+    font-size: 32px;
+}
+
+.note span {
+    display: block;
+}
