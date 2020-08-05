@@ -2,6 +2,8 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import "./Note.css";
 import NotesContext from "./NotesContext";
+import PropTypes from 'prop-types';
+
 
 const month = [
   "January",
@@ -20,6 +22,16 @@ const month = [
 
 class Note extends React.Component {
   static contextType = NotesContext;
+  static defaultProps = {
+    note: {
+      id: '',
+      name: '',
+      modified: new Date()
+    },
+    match: {
+      params: {}
+    }
+  }
   handleDelete = (id, callback) => {
     fetch(`http://localhost:9090/notes/${id}`, {
       method: "DELETE",
@@ -40,9 +52,9 @@ class Note extends React.Component {
       .then(data => {
         // call the callback when the request is successful
         // this is where the App component can remove it from state
-        this.props.route.history.push('/')
-         callback(id);
-         
+        if(this.props.match.path === "/note/:noteId" ) this.props.history.push('/')
+        callback(id);
+
       })
       .catch(error => {
         console.error(error);
@@ -50,29 +62,42 @@ class Note extends React.Component {
   };
 
   render() {
-    const date__modified = new Date(this.props.note.modified);
+    let note = "";
+    note = this.props.note;
+    
+
+    if (this.props.match && this.props.match.path === "/note/:noteId" && this.context.notes.length > 0) {
+      note = this.context.notes.find(note => note.id === this.props.match.params.noteId)
+    }
+
+    const date__modified = new Date(note.modified);
+
     return (
       <>
         <div className="note">
-          <NavLink to={`/note/${this.props.note.id}`}>
-            <span className="note__title">{this.props.note.name}</span>
+          <NavLink to={`/note/${note.id}`}>
+            <span className="note__title">{note.name}</span>
           </NavLink>
           <span className="note__modified">
             Date modified on {date__modified.getDate()}{" "}
             {month[date__modified.getMonth()]} {date__modified.getFullYear()}
           </span>
           <input
-            onClick={() => {                
-              this.handleDelete(this.props.note.id, this.context.deleteNote);
+            onClick={() => {
+              this.handleDelete(note.id, this.context.deleteNote);
             }}
             type="button"
             value="Delete"
           />
         </div>
-        {(this.props.route.match && this.props.route.match.path === "/note/:noteId") ? <div>{this.props.note.content}</div> : ""}
+        {(this.props.match && this.props.match.path === "/note/:noteId") ? <div>{note.content}</div> : ""}
       </>
     );
   }
+}
+
+Note.propTypes = {
+  note: PropTypes.object
 }
 
 export default Note;

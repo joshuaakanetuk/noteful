@@ -4,18 +4,27 @@ ul, li {
     margin: 0;
 }
 
-li {
+.sidebar__, li {
     text-align: center;
-    padding: 20px 0;
     border: 1px solid black;
+    width: 100%;
+    padding: 0;
+    height: 100%;
 }
 
-a {
+.sidebar__:last-child {
+    padding: 20px 0;
+}
+
+.sidebar__  a {
+    display: block;
     color: black;
     text-decoration: none;
+    width: 100%;
+    height: 100%;
+    padding: 20px 0;
 }
-
-.active > li {
+.sidebar__ > .active {
     background-color: black;
     color: white;
 }

@@ -1,38 +1,48 @@
 import React from 'react'
-import {  NavLink } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import './Sidebar.css'
+
 import NotesContext from './NotesContext';
+import PropTypes from 'prop-types';
+
 
 class Sidebar extends React.Component {
     static contextType = NotesContext;
+    state = {
+        showAddFolderForm: false
+    }
     render() {
         let selectedFolder = {};
         let selectedFolderName = {};
         let folders;
+        let sidebar = [];
 
-        console.log(this.props)
-        //onClick={this.props.history.push('/')
-        if(this.props.match.path === "/note/:noteId") {
+        if (this.props.match.path === "/note/:noteId") {
             selectedFolder = this.context.notes.find(note => note.id === this.props.match.params.noteId)
-            selectedFolderName = this.context.folders.find(folder => folder.id ===  selectedFolder.folderId)
+            selectedFolderName = this.context.folders.find(folder => folder.id === selectedFolder.folderId)
         }
         else {
             folders = this.context.folders.map((folder, i) => {
                 return (
-                    <NavLink to={`/folder/${folder.id}`} key={i}><li >{folder.name}</li></NavLink>
+                    <li key={i} className="sidebar__"> <NavLink to={`/folder/${folder.id}`} >{folder.name}</NavLink></li>
                 )
             });
+            sidebar = [folders, <li className="sidebar__" key={1} onClick={() => this.context.showAddFolderForm('folder')}>Add Folder</li>]
         }
 
+        const sidebarcontent =  (folders && folders.length > 0) ? sidebar : (<><li key={1} onClick={() => this.props.history.goBack()}>Go Back</li><h1>{selectedFolder ? selectedFolderName.name : ''}</h1></>)
+
         return (
-            
-            <div>
-                {
-                    (folders && folders.length > 0) ? folders : (<><input type="button" onClick={() => this.props.history.goBack()} value="Go Back" /><div>{selectedFolder ? selectedFolderName.name : ''}</div></>)
-                }
-            </div>
+            <ul>
+                {sidebarcontent}
+            </ul>
         )
     }
+}
+
+Sidebar.propTypes = {
+    match: PropTypes.object,
+    history: PropTypes.object
 }
 
 export default Sidebar;
