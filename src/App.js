@@ -78,8 +78,8 @@ class App extends React.Component {
   }
   render() {
     const contextValue = {
-      folders: this.state.folders,
-      notes: this.state.notes,
+      folders: this.state.folders || [],
+      notes: this.state.notes || [],
       deleteNote: this.deleteNote,
       showAddFolderForm: this.showAddFolderForm,
       addFolder: this.addFolder,

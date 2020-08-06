@@ -63,7 +63,7 @@ class Note extends React.Component {
 
   render() {
     let note = "";
-    note = this.props.note;
+    note = this.props.note || [];
     
 
     if (this.props.match && this.props.match.path === "/note/:noteId" && this.context.notes.length > 0) {
@@ -97,7 +97,15 @@ class Note extends React.Component {
 }
 
 Note.propTypes = {
-  note: PropTypes.object
+  note: PropTypes.shape({
+    id: PropTypes.string,
+    name: PropTypes.string.isRequired,
+    modified: function(props, propName, componentName) {
+      if (typeof props.modified != 'object' && typeof props.modified != 'string') {
+          return new Error('This isn\'t a date');
+      }
+    },
+  })
 }
 
 export default Note;

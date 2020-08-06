@@ -42,7 +42,6 @@ class AddFolder extends Component {
         console.log(data)
         this.context.addFolder(data);
         this.context.showAddFolderForm();
-
       })
       .catch(error => {
         this.setState({
