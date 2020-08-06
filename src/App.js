@@ -14,13 +14,15 @@ function get(url) {
   return fetch(url)
     .then(res => {
       if (!res.ok) {
-        throw new Error('Something went wrong, please try again later.');
+        throw new Error('Couldn\'t get notes & folders. May need to restart server.');
       }
       return res;
     })
     .then(res => res.json())
     .catch(err => {
+      alert('Couldn\'t get notes & folders. May need to restart server.');
       console.log(err)
+      
     });
 
 }
