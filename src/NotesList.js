@@ -9,13 +9,17 @@ class NotesList extends React.Component {
     render() {
         let notes = [];
 
+
         if(this.props.match && this.props.match.path === "/note/:noteId") {
-            notes = this.context.notes.find(note => note.id === this.props.match.params.noteId)
+            notes = this.context.notes.find(note => {
+                 return note.id === this.props.match.params.noteId
+                })
         }
         else if(this.context.notes){
-            
             notes = ((this.props && this.props.match.params.folderId) ? this.context.notes.filter((note, i) => note.folderId === this.props.match.params.folderId) : this.context.notes);
         }
+
+        
 
         // if notes isn't an array it's a object
         if(!(Array.isArray(notes))) {

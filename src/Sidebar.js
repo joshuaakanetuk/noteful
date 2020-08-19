@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import './Sidebar.css'
@@ -14,17 +15,18 @@ class Sidebar extends React.Component {
     render() {
         let selectedFolder = {};
         let selectedFolderName = {};
-        let folders;
+        let folders = [];
         let sidebar = [];
 
         if (this.props.match.path === "/note/:noteId") {
-            selectedFolder = this.context.notes.find(note => note.id === this.props.match.params.noteId)
+            let notes = this.context.notes;
+            selectedFolder = notes.find(note => note.id == this.props.match.params.noteId)
             selectedFolderName = this.context.folders.find(folder => folder.id === selectedFolder.folderId)
         }
         else if (this.context.folders && this.context.folders.length >= 1) {
             folders = this.context.folders.map((folder, i) => {
                 return (
-                    <li key={i} className="sidebar__"> <NavLink to={`/folder/${folder.id}`} >{folder.name}</NavLink></li>
+                    <li key={i} className="sidebar__"> <NavLink to={`/folder/${folder.id}`} >{folder.folder_name}</NavLink></li>
                 )
             });
             sidebar = [folders, <li className="sidebar__" key={1} onClick={() => this.context.showAddFolderForm('folder')}>Add Folder</li>]

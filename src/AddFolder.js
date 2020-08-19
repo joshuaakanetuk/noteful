@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import NotesContext from "./NotesContext";
+import { v4 as uuidv4 } from 'uuid';
+import config from "./config";
 
 class AddFolder extends Component {
   static contextType = NotesContext;
@@ -7,21 +9,21 @@ class AddFolder extends Component {
     super(props);
     this.state = {
       err: "",
-      name: {
+      folder_name: {
         value: "",
         touched: false
       }
     };
   }
   updateName(name) {
-    this.setState({ name: { value: name, touched: true } });
+    this.setState({ folder_name: { value: name, touched: true } });
   }
   handleSubmit(event) {
     event.preventDefault();
-    const newFolder = {name: this.state.name.value};
+    const newFolder = {id: uuidv4(), folder_name: this.state.folder_name.value};
 
     
-    fetch(`http://localhost:9090/folders/`, {
+    fetch(config.API_ENDPOINT + `/api/folders/`, {
       method: "POST",
       body: JSON.stringify(newFolder),
       headers: {
@@ -39,7 +41,6 @@ class AddFolder extends Component {
         return res.json();
       })
       .then(data => {
-        console.log(data)
         this.context.addFolder(data);
         this.context.showAddFolderForm();
       })
@@ -53,7 +54,7 @@ class AddFolder extends Component {
   }
 
   validateName() {
-    const name = this.state.name.value.trim();
+    const name = this.state.folder_name.value.trim();
     if (name.length === 0) {
       return "Name is required";
     } 

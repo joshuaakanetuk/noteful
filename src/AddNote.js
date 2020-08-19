@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import NotesContext from "./NotesContext";
+import config from './config'
 
 class AddNote extends Component {
   static contextType = NotesContext;
@@ -7,7 +8,7 @@ class AddNote extends Component {
     super(props);
     this.state = {
       err: false,
-      name: {
+      note_name: {
         value: "",
         touched: false
       },
@@ -22,7 +23,7 @@ class AddNote extends Component {
     };
   }
   updateName(name) {
-    this.setState({ name: { value: name, touched: true } });
+    this.setState({ note_name: { value: name, touched: true } });
   }
   updateFolder(folderId) {
     this.setState({ folder: { value: folderId, touched: true } });
@@ -32,11 +33,11 @@ class AddNote extends Component {
   }
   handleSubmit(event) {
     event.preventDefault();
-    const { name, folder, content } = this.state;
-    const note = {name: name.value, folderId: folder.value, content: content.value, modified: new Date()};
+    const { note_name, folder, content } = this.state;
+    const note = {note_name: note_name.value, folderId: folder.value, content: content.value, date_modified: new Date()};
 
     
-    fetch(`http://localhost:9090/notes/`, {
+    fetch(config.API_ENDPOINT + `/api/notes/`, {
       method: "POST",
       body: JSON.stringify(note),
       headers: {
@@ -54,7 +55,6 @@ class AddNote extends Component {
         return res.json();
       })
       .then(data => {
-        console.log(data)
         this.context.addNote(data);
         this.context.showAddFolderForm();
 
@@ -69,7 +69,7 @@ class AddNote extends Component {
   }
 
   validateName() {
-    const name = this.state.name.value.trim();
+    const name = this.state.note_name.value.trim();
     if (name.length === 0) {
       return "Name is required";
     } 
@@ -107,7 +107,7 @@ class AddNote extends Component {
           >
               <option>Choose a folder...</option>
               {this.context.folders.map( (folder, i) => {
-                  return <option key={i} value={folder.id}>{folder.name}</option>
+                  return <option key={i} value={folder.id}>{folder.folder_name}</option>
               })}
               </select>
         </div>

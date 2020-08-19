@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Link } from 'react-router-dom'
+import { Route, Link, Router } from 'react-router-dom'
 import './App.css';
 import Sidebar from './Sidebar'
 import NotesList from './NotesList';
@@ -9,6 +9,8 @@ import AppError from './AppError'
 import AddFolder from './AddFolder'
 import AddNote from './AddNote'
 import NotesContext from './NotesContext'
+import config from './config'
+
 
 function get(url) {
   return fetch(url)
@@ -35,7 +37,7 @@ class App extends React.Component {
     formType: ""
   };
   componentDidMount() {
-    Promise.all([get('http://localhost:9090/folders'), get('http://localhost:9090/notes')])
+    Promise.all([get(config.API_ENDPOINT + '/api/folders'), get(config.API_ENDPOINT + '/api/notes')])
       .then(value => {
         this.setState({
           folders: value[0],
